@@ -1,0 +1,38 @@
+.checked{
+    
+    
+    position: relative;
+    top: 17px;
+    zoom: 0.7;
+    float: left;
+}
+‏
+.border{
+    border-color: lightgrey;
+}
+
+
+  
+input[type='checkbox']{
+    width: 14px !important;
+    height: 14px !important;
+    /* margin: 5px; */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+   
+    box-shadow: black;
+    font-size: 0.8em;
+    text-align: center;
+    line-height: 1em;
+    background: lightgrey;
+    border-radius: 3px;
+  
+  }
+  
+  input[type='checkbox']:checked:after {
+    content: '✔';
+    color:black;
+    font-size: medium;
+  }
