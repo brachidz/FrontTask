@@ -7,7 +7,8 @@ export default  function Tasks() {
     const[numOfTasks,setNumOfTasks]=useState(0);
     const[listOfTasks,setListOfTasks]=useState([]);
     const[numOfRemains,setNumOfRemains]=useState(0);
-    const [task,setTask]=useState()
+    const [task,setTask]=useState();
+    let countOfRemains=0;
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
@@ -16,16 +17,20 @@ export default  function Tasks() {
       body: "",
       done: 0
       };
-    useEffect(()=>{
-    axios.get( 
+
+    
+      useEffect(async()=>{
+        initRemaines()
+     
+    await axios.get( 
       'http://todo.etodo.xyz/api/v1/tasks',
        config
     )
     .then(res => {
-        
+        console.log(res.data);
         setListOfTasks( Object.values(res.data.docs));
         setNumOfTasks(res.data.docs.length);
-        setNumOfRemains(res.data.docs.length);
+        
        });
   });
   function  addTask() {
@@ -36,6 +41,22 @@ export default  function Tasks() {
     ).then(console.log).catch(console.log);
     
   }
+  function  initRemaines() {
+    listOfTasks.map((item) => 
+        
+    {if(item.done==0)
+      {
+      
+      countOfRemains++
+      
+      }
+     
+     } 
+     
+    );
+    setNumOfRemains(countOfRemains);
+    
+  }
   function  deleteTask(item) {
     let id=item._id;
     axios.delete( 
@@ -44,6 +65,8 @@ export default  function Tasks() {
     ).then(console.log).catch(console.log);
     
   }
+
+
   function  editTask(item) {
       let id=item._id;
       const bodyParametersForEdit = {
@@ -60,6 +83,38 @@ export default  function Tasks() {
     ).then(console.log).catch(console.log);
     
   }
+
+  function changeTaskStatus(item) {
+    
+    let id=item._id;
+    let status=item.done;
+   if(status===false)
+   {
+     status=true;
+    countOfRemains--;
+   }
+   else 
+   {
+     status=false;
+     countOfRemains++
+   }
+    const bodyParametersForEdit = {
+       title: item.title,
+       body: item.body,
+       
+       done: status
+       };
+
+    axios.patch( 
+    `http://todo.etodo.xyz/api/v1/tasks/${id}`,
+    bodyParametersForEdit,
+    config
+  ).then(console.log).catch(console.log);
+  
+}
+
+
+
   return (
     
 <div >
@@ -82,9 +137,10 @@ export default  function Tasks() {
                   <div className="row" >
     
                   <div className="col-1"  >
-              <input type="checkbox"  className="checked"></input>
+                
+              <input type="checkbox" defaultChecked={item.done} className="checked "  onClick={() => { changeTaskStatus(item) }} ></input>
                   </div>
-                  <div className="col-9" style={{fontSize:"1.2rem",height:"3rem" , }} onClick={() => { editTask(item) }}>
+                  <div className="col-9 " style={{fontSize:"1.2rem",height:"3rem" , }} onClick={() => { editTask(item) }}>
                    {item.title}
                   </div>
                   <div className="col-2">
